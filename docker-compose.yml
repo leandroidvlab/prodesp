@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+    qwcontrol:
+        image: qwsoftware/qwcontrol:2.6.6
+        links:
+          - postgres
+        environment:
+            QWCONTROL_DATABASE_DRIVER: org.postgresql.Driver
+            QWCONTROL_DATABASE_USERNAME: qwcontrol
+            QWCONTROL_DATABASE_PASSWORD: qws2000
+            QWCONTROL_DATABASE_URL: jdbc:postgresql://postgres/qwcontrol?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+            QWCONTROL_GRAILS_URL: localhost:4440
+        volumes:
+          - qwdata:/home/qwcontrol/server/data
+        ports:
+          - 4440:4440
+    postgres:
+        image: postgres:10
+        expose:
+          - 5432
+        environment:
+          - POSTGRES_DB=qwcontrol
+          - POSTGRES_USER=qwcontrol
+          - POSTGRES_PASSWORD=qws2000
+        volumes:
+          - dbdata:/var/lib/postgresql/data
+
+volumes:
+    dbdata:
+    qwdata:
